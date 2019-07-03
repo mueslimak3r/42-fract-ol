@@ -31,10 +31,12 @@ int			newwindow(t_mlx *s, char *title)
 	if (!(s->mlx = mlx_init()) ||
 		!(s->window = mlx_new_window(s->mlx, WIN_WIDTH, WIN_HEIGHT, title)))
 	{
+		free(title);
 		if (s->window)
 			mlx_destroy_window(s->mlx, s->window);
 		return (1);
 	}
+	free(title);
 	return (0);
 }
 

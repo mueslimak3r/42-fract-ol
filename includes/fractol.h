@@ -13,6 +13,7 @@
 # define WIN_HEIGHT 1080
 # define MENU_WIDTH 100
 # define FT_MIN(A, B) (((A) < (B)) ? (A) : (B))
+#define degreesToRadians(angleDegrees) ((angleDegrees) * M_PI / 180.0)
 
 typedef struct		s_map
 {
