@@ -14,17 +14,20 @@
 # define MENU_WIDTH 100
 # define FT_MIN(A, B) (((A) < (B)) ? (A) : (B))
 
-typedef struct		s_map
+typedef struct s_triangle	t_triangle;
+typedef struct s_map	t_map;
+
+struct				s_map
 {
-	int				width;
-	int				height;
-	int				depth_min;
-	int				depth_max;
-	int				*colors;
-	int				color1;
-	int				color2;
-	int				iter;
-}					t_map;
+	int	width;
+	int	height;
+	int	depth_min;
+	int	depth_max;
+	int	*colors;
+	int	color1;
+	int	color2;
+	int	iter;
+};
 
 typedef struct		s_vect_2
 {
@@ -69,6 +72,13 @@ typedef struct		s_mlx
 	t_mouse			*mouse;
 	// double			**zbuf;
 }					t_mlx;
+
+struct	s_triangle
+{
+	t_vect_2	parent[3];
+	t_vect_2	child[3];
+};
+
 
 int					init(char *title, t_mlx *mlx);
 void				mlx_draw(t_mlx *mlx);

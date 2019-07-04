@@ -30,58 +30,60 @@ t_vect_2        dda(t_mlx *mlx, t_vect_2 start, t_vect_2 end)
     return (end);
     //printf("\n");
 }
-/*
-void                flip(t_mlx *mlx, t_vect_2 mid_1, t_vect_2 mid_2, t_vect_2 mid_3, int i)
-{
-    t_vect_2 r_1;
-    t_vect_2 r_2;
-    t_vect_2 r_3;
 
-    theta = degreesToRadians(180);
-
-cs = cos(theta);
-sn = sin(theta);
-
-x = x * cs - y * sn;
-y = x * sn + y * cs;
-
-    sierpinksi_r(mlx, mid_1, mid_2, mid_3, i + 1);
-}
-*/
-
-void                sierpinksi_r(t_mlx *mlx, t_vect_2 m_1, t_vect_2 m_2, t_vect_2 m_3, int i)
+void                sierpinksi_r(t_mlx *mlx, t_triangle tri, int i)
 {
     if (i > 10)
         return ;
-    t_vect_2        mid_1 = dda(mlx, m_1, m_2);
-    t_vect_2        mid_2 = dda(mlx, m_3, m_1);
-    t_vect_2        mid_3 = dda(mlx, m_2, m_3);
-    //flip(mlx, mid_1, mid_2, mid_3, i);
-    sierpinksi_r(mlx, mid_1, mid_2, mid_3, i + 1);
+    t_triangle      t1;
+    t_triangle      t2;
+    t_triangle      t3;
+
+    
+    t1.child[0] = dda(mlx, tri.child[0], tri.child[1]);
+    t2.child[0] = dda(mlx, tri.child[1], tri.child[2]);
+    t3.child[0] = dda(mlx, tri.child[2], tri.child[0]);
+
+    t1.child[1] = dda(mlx, tri.child[0], tri.parent[1]);
+    t1.child[2] = dda(mlx, tri.parent[1], tri.child[1]);
+    
+    t2.child[1] = dda(mlx, tri.child[1], tri.parent[2]);
+    t2.child[2] = dda(mlx, tri.parent[2], tri.child[2]);
+    
+    t3.child[1] = dda(mlx, tri.child[2], tri.parent[0]);
+    t3.child[2] = dda(mlx, tri.parent[0], tri.child[0]);
+
+    t1.parent[0] = tri.child[1];
+    t1.parent[1] = tri.child[0];
+    t1.parent[2] = tri.parent[1];
+    t2.parent[0] = tri.child[2];
+    t2.parent[1] = tri.child[1];
+    t2.parent[2] = tri.parent[2];
+    t3.parent[0] = tri.child[0];
+    t3.parent[1] = tri.child[2];
+    t3.parent[2] = tri.parent[0];
+    
+    sierpinksi_r(mlx, t1, i + 1);
+    sierpinksi_r(mlx, t2, i + 1);
+    sierpinksi_r(mlx, t3, i + 1);
 }
 
 void                sierpinksi_init(t_mlx *mlx)
 {
-    t_vect_2        one;
-    t_vect_2        two;
-    t_vect_2        three;
-
-    t_vect_2        m_1;
-    t_vect_2        m_2;
-    t_vect_2        m_3;
+    t_triangle      tri;
 
     double          side = WIN_WIDTH / 2;
     double          alt = (sqrt(3) / 2) * side;
-    one.x = (WIN_WIDTH - (side)) / 2;
-    one.y = (WIN_HEIGHT - alt) / 2;
-    two.x = WIN_WIDTH - (WIN_WIDTH - (side)) / 2;
-    two.y = (WIN_HEIGHT - alt) / 2;
-    three.x = WIN_WIDTH / 2;
-    three.y = ((WIN_HEIGHT - alt) / 2) + alt;
-    m_1 = dda(mlx, one, two);
-    m_2 = dda(mlx, three, one);
-    m_3 = dda(mlx, two, three);
-    sierpinksi_r(mlx, m_1, m_2, m_3, 0);
+    tri.parent[0].x = (WIN_WIDTH - (side)) / 2;
+    tri.parent[0].y = (WIN_HEIGHT - alt) / 2;
+    tri.parent[1].x = WIN_WIDTH - (WIN_WIDTH - (side)) / 2;
+    tri.parent[1].y = (WIN_HEIGHT - alt) / 2;
+    tri.parent[2].x = WIN_WIDTH / 2;
+    tri.parent[2].y = ((WIN_HEIGHT - alt) / 2) + alt;
+    tri.child[0] = dda(mlx, tri.parent[0], tri.parent[1]);
+    tri.child[1] = dda(mlx, tri.parent[1], tri.parent[2]);
+    tri.child[2] = dda(mlx, tri.parent[2], tri.parent[0]);
+    sierpinksi_r(mlx, tri, 0);
 }
 
 void				mlx_draw(t_mlx *mlx)
