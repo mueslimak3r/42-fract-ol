@@ -70,7 +70,7 @@ typedef struct		s_mlx
 	t_image			*image;
 	t_cam			*cam;
 	t_mouse			*mouse;
-	// double			**zbuf;
+	char			*type;
 }					t_mlx;
 
 struct	s_triangle

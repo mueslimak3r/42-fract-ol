@@ -16,10 +16,8 @@ t_vect_2        dda(t_mlx *mlx, t_vect_2 start, t_vect_2 end)
 	dy = (int)end.y - (int)start.y;
 	steps = ft_abs(dx) > ft_abs(dy) ? ft_abs(dx) : ft_abs(dy);
 	i = 0;
-    //printf("start: %d %d\n", start.x, start.y);
 	while (i <= steps)
 	{
-        //printf("%d %d\n", start.x, start.y);
         if (i == (steps / 2) - 1)
             end = (t_vect_2){ start.x, start.y };
         image_set_pixel(mlx->image, start.x, start.y, 14358738);
@@ -28,10 +26,9 @@ t_vect_2        dda(t_mlx *mlx, t_vect_2 start, t_vect_2 end)
 		i++;
 	}
     return (end);
-    //printf("\n");
 }
 
-void                sierpinksi_r(t_mlx *mlx, t_triangle tri, int i)
+void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i)
 {
     if (i > 10)
         return ;
@@ -63,12 +60,12 @@ void                sierpinksi_r(t_mlx *mlx, t_triangle tri, int i)
     t3.parent[1] = tri.child[2];
     t3.parent[2] = tri.parent[0];
     
-    sierpinksi_r(mlx, t1, i + 1);
-    sierpinksi_r(mlx, t2, i + 1);
-    sierpinksi_r(mlx, t3, i + 1);
+    sierpinski_r(mlx, t1, i + 1);
+    sierpinski_r(mlx, t2, i + 1);
+    sierpinski_r(mlx, t3, i + 1);
 }
 
-void                sierpinksi_init(t_mlx *mlx)
+void                sierpinski_init(t_mlx *mlx)
 {
     t_triangle      tri;
 
@@ -83,16 +80,22 @@ void                sierpinksi_init(t_mlx *mlx)
     tri.child[0] = dda(mlx, tri.parent[0], tri.parent[1]);
     tri.child[1] = dda(mlx, tri.parent[1], tri.parent[2]);
     tri.child[2] = dda(mlx, tri.parent[2], tri.parent[0]);
-    sierpinksi_r(mlx, tri, 0);
+    sierpinski_r(mlx, tri, 0);
 }
 
 void				mlx_draw(t_mlx *mlx)
 {
+    bool             valid;
+
+    valid = false;
     clear_image(mlx->image);
-    /*for (int y = 0; y < WIN_HEIGHT; y++)
-        for (int x = 0; x < WIN_WIDTH; x++)
-            image_set_pixel(mlx->image, x, y, 14358738);
-    */
-    sierpinksi_init(mlx);
-    mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->image->image, 0, 0);
+    if (ft_strcmp(mlx->type, "sierpinski") == 0)
+    {
+        sierpinski_init(mlx);
+        valid = true;
+    }
+    if (valid == true)
+        mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->image->image, 0, 0);
+    else
+        mlx_string_put(mlx->mlx, mlx->window, WIN_WIDTH / 2 - 10, 10, WHITE, "bad selection");
 }

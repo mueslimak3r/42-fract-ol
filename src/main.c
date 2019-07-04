@@ -13,6 +13,7 @@ int main (int ac, char **av)
         return(die("usage:"));
     if (!(init(ft_strjoin("fractol - ", av[1]), &mlx)))
         return(die("error"));
+    mlx.type = av[1];
     start(&mlx);
     return (0);
 }
