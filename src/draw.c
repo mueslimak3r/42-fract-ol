@@ -20,7 +20,8 @@ t_vect_2        dda(t_mlx *mlx, t_vect_2 start, t_vect_2 end)
 	{
         if (i == (steps / 2) - 1)
             end = (t_vect_2){ start.x, start.y };
-        image_set_pixel(mlx->image, start.x, start.y, 14358738);
+        if (start.x >= 0 && start.x <= WIN_WIDTH && start.y >= 0 && start.y <= WIN_HEIGHT)
+            image_set_pixel(mlx->image, start.x, start.y, 14358738);
 		start.x += dx / (float)steps;
 		start.y += dy / (float)steps;
 		i++;
@@ -30,13 +31,12 @@ t_vect_2        dda(t_mlx *mlx, t_vect_2 start, t_vect_2 end)
 
 void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i)
 {
-    if (i > 10)
+    if (i > mlx->iterations)
         return ;
     t_triangle      t1;
     t_triangle      t2;
     t_triangle      t3;
 
-    
     t1.child[0] = dda(mlx, tri.child[0], tri.child[1]);
     t2.child[0] = dda(mlx, tri.child[1], tri.child[2]);
     t3.child[0] = dda(mlx, tri.child[2], tri.child[0]);
@@ -59,7 +59,6 @@ void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i)
     t3.parent[0] = tri.child[0];
     t3.parent[1] = tri.child[2];
     t3.parent[2] = tri.parent[0];
-    
     sierpinski_r(mlx, t1, i + 1);
     sierpinski_r(mlx, t2, i + 1);
     sierpinski_r(mlx, t3, i + 1);
@@ -68,15 +67,15 @@ void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i)
 void                sierpinski_init(t_mlx *mlx)
 {
     t_triangle      tri;
-
-    double          side = WIN_WIDTH / 2;
+    t_cam           *cam = mlx->cam;
+    double          side = (WIN_WIDTH / 2) * cam->scale;
     double          alt = (sqrt(3) / 2) * side;
-    tri.parent[0].x = (WIN_WIDTH - (side)) / 2;
-    tri.parent[0].y = (WIN_HEIGHT - alt) / 2;
-    tri.parent[1].x = WIN_WIDTH - (WIN_WIDTH - (side)) / 2;
-    tri.parent[1].y = (WIN_HEIGHT - alt) / 2;
-    tri.parent[2].x = WIN_WIDTH / 2;
-    tri.parent[2].y = ((WIN_HEIGHT - alt) / 2) + alt;
+    tri.parent[0].x = cam->offsetx - (side / 2);
+    tri.parent[0].y = cam->offsety - (alt / 2);
+    tri.parent[1].x = cam->offsetx + (side / 2);
+    tri.parent[1].y = cam->offsety - (alt / 2);
+    tri.parent[2].x = cam->offsetx;
+    tri.parent[2].y = cam->offsety + (alt / 2);;
     tri.child[0] = dda(mlx, tri.parent[0], tri.parent[1]);
     tri.child[1] = dda(mlx, tri.parent[1], tri.parent[2]);
     tri.child[2] = dda(mlx, tri.parent[2], tri.parent[0]);

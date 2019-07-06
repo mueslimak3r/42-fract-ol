@@ -7,6 +7,18 @@ static int	fdf_key_hook(int key, t_mlx *mlx)
 		mlxdel(mlx);
 		exit(0);
 	}
+	if (key == KEY_W)
+	{
+		mlx->cam->scale += 1;
+	}
+	if (key == KEY_S)
+	{
+		mlx->cam->scale -= 1;
+	}
+	if (key == KEY_I)
+	{
+		mlx->iterations += 5;
+	}
 	mlx_clear_window(mlx->mlx, mlx->window);
 	mlx_draw(mlx);
 	mlx_string_put(mlx->mlx, mlx->window, 10, WIN_HEIGHT - 30, WHITE, "ESC: close");

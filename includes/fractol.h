@@ -65,6 +65,7 @@ typedef struct		s_mouse
 
 typedef struct		s_mlx
 {
+	int				iterations;
 	void			*mlx;
 	void			*window;
 	t_image			*image;

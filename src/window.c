@@ -61,11 +61,12 @@ int     init(char *title, t_mlx *mlx)
 	// Passes the map into map
 	// Fill the attributes of the camera in memory
 	// Sets parameter for camera angle for x-position (initial rotation)
+	mlx->iterations = 5;
 	mlx->cam->x = 0.5;
 	// Sets parameter for camera angle for y-position (initial rotation)
 	mlx->cam->y = 0.5;
 	// Dynamically adjusts INITIAL scale of image, based on initial size of map
-	mlx->cam->scale = FT_MIN((WIN_WIDTH - MENU_WIDTH) / 2, (WIN_HEIGHT - MENU_WIDTH) / 2);
+	mlx->cam->scale = 1;
 	// Offset Initial x state at window 
 	mlx->cam->offsetx = WIN_WIDTH / 2;
 	// Offsets initial y state at window
