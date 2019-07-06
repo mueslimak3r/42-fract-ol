@@ -28,7 +28,12 @@ t_vect_2        dda(t_mlx *mlx, t_vect_2 start, t_vect_2 end)
 	}
     return (end);
 }
+/*
+static              thread_solve()
+{
 
+}
+*/
 void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i)
 {
     if (i > mlx->iterations)
@@ -36,19 +41,22 @@ void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i)
     t_triangle      t1;
     t_triangle      t2;
     t_triangle      t3;
-
     t1.child[0] = dda(mlx, tri.child[0], tri.child[1]);
     t2.child[0] = dda(mlx, tri.child[1], tri.child[2]);
-    t3.child[0] = dda(mlx, tri.child[2], tri.child[0]);
+    t3.child[0] = dda(mlx, tri.child[2], tri.child[0]);   
 
     t1.child[1] = dda(mlx, tri.child[0], tri.parent[1]);
     t1.child[2] = dda(mlx, tri.parent[1], tri.child[1]);
-    
+
+ 
     t2.child[1] = dda(mlx, tri.child[1], tri.parent[2]);
     t2.child[2] = dda(mlx, tri.parent[2], tri.child[2]);
     
+    
+
     t3.child[1] = dda(mlx, tri.child[2], tri.parent[0]);
     t3.child[2] = dda(mlx, tri.parent[0], tri.child[0]);
+
 
     t1.parent[0] = tri.child[1];
     t1.parent[1] = tri.child[0];

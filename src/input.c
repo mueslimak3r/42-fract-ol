@@ -17,7 +17,7 @@ static int	fdf_key_hook(int key, t_mlx *mlx)
 	}
 	if (key == KEY_I)
 	{
-		mlx->iterations += 5;
+		mlx->iterations += 1;
 	}
 	mlx_clear_window(mlx->mlx, mlx->window);
 	mlx_draw(mlx);
