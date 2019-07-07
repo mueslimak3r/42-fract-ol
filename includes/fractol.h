@@ -9,6 +9,8 @@
 # include <limits.h>
 # include <fcntl.h>
 # include <stdlib.h>
+# include <pthread.h>
+
 # define WIN_WIDTH 1920
 # define WIN_HEIGHT 1080
 # define MENU_WIDTH 100
@@ -16,7 +18,7 @@
 
 typedef struct s_triangle	t_triangle;
 typedef struct s_map	t_map;
-
+pthread_mutex_t g_lock;
 struct				s_map
 {
 	int	width;
@@ -50,7 +52,7 @@ typedef struct		s_cam
 	double			offsety;
 	double			x;
 	double			y;
-	int				scale;
+	double			scale;
 	double			**matrix;
 }					t_cam;
 
@@ -80,6 +82,13 @@ struct	s_triangle
 	t_vect_2	child[3];
 };
 
+typedef struct		s_pthread_args
+{
+	int				nb;
+	t_mlx			*mlx;
+	t_triangle		*in;
+	//t_triangle		*out;
+}					t_thread_args;
 
 int					init(char *title, t_mlx *mlx);
 void				mlx_draw(t_mlx *mlx);
@@ -89,4 +98,5 @@ t_image				*del_image(t_mlx *mlx, t_image *img);
 void				clear_image(t_image *image);
 void				start(t_mlx *mlx);
 void				image_set_pixel(t_image *image, int x, int y, int color);
+
 #endif

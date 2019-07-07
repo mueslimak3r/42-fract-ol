@@ -9,15 +9,25 @@ static int	fdf_key_hook(int key, t_mlx *mlx)
 	}
 	if (key == KEY_W)
 	{
-		mlx->cam->scale += 1;
+		mlx->cam->scale *= 1.3;
 	}
 	if (key == KEY_S)
 	{
-		mlx->cam->scale -= 1;
+		if (mlx->cam->scale / 1.3 == 0)
+			return (0);
+		mlx->cam->scale /= 1.3;
 	}
 	if (key == KEY_I)
 	{
 		mlx->iterations += 1;
+		//printf("it: %d\n", mlx->iterations);
+	}
+	if (key == KEY_R)
+	{
+		if (mlx->iterations - 1 <= 0)
+			return (0);
+		mlx->iterations -= 1;
+		//printf("it: %d\n", mlx->iterations);
 	}
 	mlx_clear_window(mlx->mlx, mlx->window);
 	mlx_draw(mlx);
