@@ -82,8 +82,10 @@ struct	s_triangle
 	t_vect_2	child[3];
 };
 
-typedef struct		s_pthread_args
+typedef struct		s_thread_args
 {
+	int				xsize;
+	int				ysize;
 	int				nb;
 	t_mlx			*mlx;
 	t_triangle		*in;
@@ -98,5 +100,7 @@ t_image				*del_image(t_mlx *mlx, t_image *img);
 void				clear_image(t_image *image);
 void				start(t_mlx *mlx);
 void				image_set_pixel(t_image *image, int x, int y, int color);
+void        		dda(t_mlx *mlx, t_vect_2 start, t_vect_2 end, int it);
+void                sierpinski_init(t_mlx *mlx);
 
 #endif

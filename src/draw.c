@@ -1,11 +1,14 @@
 #include "fractol.h"
 
-void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i, bool first);
-t_triangle          new_triangles(t_triangle *tri, int nb);
-
 static int	ft_abs(int n)
 {
 	return ((n > 0) ? n : (n * -1));
+}
+
+int         colors(int i)
+{
+    int colors[3] = { RED, GREEN, BLUE };
+    return(colors[i % 3]);
 }
 
 void        dda(t_mlx *mlx, t_vect_2 start, t_vect_2 end, int it)
@@ -23,131 +26,82 @@ void        dda(t_mlx *mlx, t_vect_2 start, t_vect_2 end, int it)
 	{
         if (i == (steps / 2) - 1)
             end = (t_vect_2){ start.x, start.y };
-        image_set_pixel(mlx->image, start.x, start.y, 14358738 - (it * 100));
+        image_set_pixel(mlx->image, start.x, start.y, colors(it));
 		start.x += dx / (float)steps;
 		start.y += dy / (float)steps;
 		i++;
 	}
 }
 
-void                check_print(t_mlx *mlx, t_vect_2 *a, t_vect_2 *b, int i)
+void                mandelbrot_check_print(t_mlx *mlx, int x, int y, int it)
 {
-    if (a->x >= 0 && a->x <= WIN_WIDTH && a->y >= 0 && a->y <= WIN_HEIGHT)
-        dda(mlx, *a, *b, i);
-    else if (b->x >= 0 && b->x <= WIN_WIDTH && b->y >= 0 && b->y <= WIN_HEIGHT)
-        dda(mlx, *a, *b, i);
+    if (x >= 0 && y <= WIN_WIDTH && y >= 0 && y <= WIN_HEIGHT)
+		image_set_pixel(mlx->image, x, y, colors(it));
 }
 
-t_triangle          new_triangles(t_triangle *tri, int nb)
+void            *mandelbrot(void *args)
 {
-    t_triangle      t;
-    if (nb == 0)
-    {
-        t.child[0] = (t_vect_2){ ((tri->child[0].x + tri->child[1].x) * 0.5f), ((tri->child[0].y + tri->child[1].y) * 0.5f) };
-        t.child[1] = (t_vect_2){ ((tri->child[0].x + tri->parent[1].x) * 0.5f), ((tri->child[0].y + tri->parent[1].y) * 0.5f) };
-        t.child[2] = (t_vect_2){ ((tri->parent[1].x + tri->child[1].x) * 0.5f), ((tri->parent[1].y + tri->child[1].y) * 0.5f) };
-        t.parent[0] = tri->child[1];
-        t.parent[1] = tri->child[0];
-        t.parent[2] = tri->parent[1];
-    }
-    if (nb == 1)
-    {
-        t.child[0] = (t_vect_2){ ((tri->child[1].x + tri->child[2].x) * 0.5f), ((tri->child[1].y + tri->child[2].y) * 0.5f) };
-        t.child[1] = (t_vect_2){ ((tri->child[1].x + tri->parent[2].x) * 0.5f), ((tri->child[1].y + tri->parent[2].y) * 0.5f) };
-        t.child[2] = (t_vect_2){ ((tri->parent[2].x + tri->child[2].x) * 0.5f), ((tri->parent[2].y + tri->child[2].y) * 0.5f) };
-        t.parent[0] = tri->child[2];
-        t.parent[1] = tri->child[1];
-        t.parent[2] = tri->parent[2];
-    }
-    if (nb == 2)
-    {
-        t.child[0] = (t_vect_2){ ((tri->child[2].x + tri->child[0].x) * 0.5f), ((tri->child[2].y + tri->child[0].y) * 0.5f) };
-        t.child[1] = (t_vect_2){ ((tri->child[2].x + tri->parent[0].x) * 0.5f), ((tri->child[2].y + tri->parent[0].y) * 0.5f) };
-        t.child[2] = (t_vect_2){ ((tri->parent[0].x + tri->child[0].x) * 0.5f), ((tri->parent[0].y + tri->child[0].y) * 0.5f) };
-        t.parent[0] = tri->child[0];
-        t.parent[1] = tri->child[2];
-        t.parent[2] = tri->parent[0];
-    }
-    return (t);
+	t_thread_args *r= args;
+
+	t_mlx *mlx = r->mlx;
+
+	pthread_mutex_lock(&g_lock);
+  	int XSize= (1920 / 2);
+  	int YSize= (1080 / 2);
+  	double MinIm=-1.0;
+  	double MaxIm=1.0;
+  	double MinRe=-2.0;
+  	double MaxRe=1.0;
+  	double StepX=(MaxRe-MinRe)/XSize;
+  	double StepY=(MaxIm-MinIm)/YSize;
+  	for(int y=r->ysize;y<YSize;y++)
+	{
+      	double Im=MinIm+StepY*y;
+      	for(int x=r->xsize; x<XSize; x++)
+      	{
+          	double Re=MinRe+StepX*x;
+          	double Zr=Re;
+          	double Zi=Im;
+          	int it=0;
+        	for(int n=0;n<120;n++)
+		  	{
+				it = n;
+				double a=Zr*Zr;
+				double b=Zi*Zi;
+            	if(a+b>4.0) 
+			  		break;
+            	Zi=2*Zr*Zi+Im;
+				Zr=a-b+Re;
+			}
+			mandelbrot_check_print(mlx, x, y, it);
+    	}
+  	}
+	  pthread_mutex_unlock(&g_lock);
+	pthread_exit(NULL);
+	return (0);
 }
 
-void                *sierpinski_thread(void *args)
+void				mandelbrot_init(t_mlx *mlx)
 {
-    
-    t_thread_args *r = args;
-    t_triangle      *t;
-
-    t = malloc(sizeof(t_triangle) * 3);
-
-    *t = new_triangles(r->in, 0);
-    *(t + 1) = new_triangles(r->in, 1);
-    *(t + 2) = new_triangles(r->in, 2);
-    pthread_mutex_lock(&g_lock);
-
-    sierpinski_r(r->mlx, *t, 1, false);
-    sierpinski_r(r->mlx, *(t + 1), 1, false);
-    sierpinski_r(r->mlx, *(t + 2), 1, false);
-    free(t);
-    pthread_mutex_unlock(&g_lock);
-    pthread_exit(NULL);
-    return 0;
-}
-
-
-
-void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i, bool first)
-{
-    if (mlx->iterations > 12)
-        mlx->iterations = 12;
-    if (i > mlx->iterations || i > 12)
-        return ;
-    t_triangle      *t;
-    
-
-    t = malloc(sizeof(t_triangle) * 3);
-    check_print(mlx, &tri.parent[0], &tri.parent[1], i);
-    check_print(mlx, &tri.parent[1], &tri.parent[2], i);
-    check_print(mlx, &tri.parent[2], &tri.parent[0], i);
-    *t = new_triangles(&tri, 0);
-    *(t + 1) = new_triangles(&tri, 1);
-    *(t + 2) = new_triangles(&tri, 2);
-    if (first)
-    {
-        pthread_t       thread[3];
-        if (pthread_mutex_init(&g_lock, NULL) != 0)
+	pthread_t       thread[4];
+	if (pthread_mutex_init(&g_lock, NULL) != 0)
             printf("Mutex initialization failed.\n");
-        for (int i = 0; i < 3; i++)
-        {
-            t_thread_args args = ((t_thread_args){ i, mlx, t + i });
-            pthread_create(&thread[i], NULL, sierpinski_thread, &args);
-            pthread_join(thread[i], NULL);
-        }
-    }
-    else
+    for (int i = 0; i < 4; i++)
     {
-        sierpinski_r(mlx, *t, i + 1, false);
-        sierpinski_r(mlx, *(t + 1), i + 1, false);
-        sierpinski_r(mlx, *(t + 2), i + 1, false);
-    }
-    free(t);
-}
-
-void                sierpinski_init(t_mlx *mlx)
-{
-    t_triangle      tri;
-    t_cam           *cam = mlx->cam;
-    double          side = (WIN_WIDTH / 2) * cam->scale;
-    double          alt = (sqrt(3) / 2) * side;
-    tri.parent[0].x = cam->offsetx - (side / 2);
-    tri.parent[0].y = cam->offsety - (alt / 2);
-    tri.parent[1].x = cam->offsetx + (side / 2);
-    tri.parent[1].y = cam->offsety - (alt / 2);
-    tri.parent[2].x = cam->offsetx;
-    tri.parent[2].y = cam->offsety + (alt / 2);
-    tri.child[0] = (t_vect_2){ ((tri.parent[0].x + tri.parent[1].x) * 0.5f), ((tri.parent[0].y + tri.parent[1].y) * 0.5f) };
-    tri.child[1] = (t_vect_2){ ((tri.parent[1].x + tri.parent[2].x) * 0.5f), ((tri.parent[1].y + tri.parent[2].y) * 0.5f) };
-    tri.child[2] = (t_vect_2){ ((tri.parent[2].x + tri.parent[0].x) * 0.5f), ((tri.parent[2].y + tri.parent[0].y) * 0.5f) };
-    sierpinski_r(mlx, tri, 0, true);
+		t_thread_args args;
+		if (i == 0)
+			args = ((t_thread_args){ 0, 0, 0, mlx, NULL });
+		if (i == 1)
+			args = ((t_thread_args){ WIN_WIDTH / 2, 0, 0, mlx, NULL });
+		if (i == 2)
+			args = ((t_thread_args){ WIN_WIDTH / 2, 0, 0, mlx, NULL });
+		if (i == 3)
+			args = ((t_thread_args){ WIN_WIDTH / 2, WIN_HEIGHT / 2, 0, mlx, NULL });
+		if (i == 1)
+			args = ((t_thread_args){ 0, WIN_WIDTH / 2, 0, mlx, NULL });
+        pthread_create(&thread[i], NULL, mandelbrot, &args);
+		pthread_join(thread[i], NULL);
+	}
 }
 
 void				mlx_draw(t_mlx *mlx)
@@ -158,7 +112,14 @@ void				mlx_draw(t_mlx *mlx)
     clear_image(mlx->image);
     if (ft_strcmp(mlx->type, "sierpinski") == 0)
     {
+        mlx->iterations = 1;
         sierpinski_init(mlx);
+        valid = true;
+    }
+    if (ft_strcmp(mlx->type, "mandelbrot") == 0)
+    {
+        mlx->iterations = 100;
+        mandelbrot(mlx);
         valid = true;
     }
     if (valid == true)
