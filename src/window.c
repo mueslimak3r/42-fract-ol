@@ -42,7 +42,6 @@ int			newwindow(t_mlx *s, char *title)
 
 int     init(char *title, t_mlx *mlx)
 {
-
 	// Allocate enough memory to fit mlx object into your program
 	// The mlx_init function will create this connection between software and 
 	// display. No parameters are needed, ant  it  will  return  a void * 
@@ -61,6 +60,12 @@ int     init(char *title, t_mlx *mlx)
 	// Passes the map into map
 	// Fill the attributes of the camera in memory
 	// Sets parameter for camera angle for x-position (initial rotation)
+	//if (!mlx->type)
+	//	printf("wut\n");
+	//if (ft_strcmp(mlx->type, "sierpinski") == 0)
+	//	mlx->iterations = 1;
+	////if (ft_strcmp(mlx->type, "mandelbrot") == 0)
+	//	mlx->iterations = 100;
 	mlx->cam->x = 0.5;
 	// Sets parameter for camera angle for y-position (initial rotation)
 	mlx->cam->y = 0.5;

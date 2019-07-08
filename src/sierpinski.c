@@ -53,21 +53,18 @@ void                *sierpinski_thread(void *args)
 {
     
     t_thread_args *r = args;
-    t_triangle      *t;
+    t_triangle      t[3];
 
-    t = malloc(sizeof(t_triangle) * 3);
-
-    *t = new_triangles(r->in, 0);
-    *(t + 1) = new_triangles(r->in, 1);
-    *(t + 2) = new_triangles(r->in, 2);
+    t[0] = new_triangles(r->in, 0);
+    t[1] = new_triangles(r->in, 1);
+    t[2] = new_triangles(r->in, 2);
     pthread_mutex_lock(&g_lock);
-    s_check_print(r->mlx, &t->parent[0], &t->parent[1], 2);
-    s_check_print(r->mlx, &(t + 1)->parent[0], &(t + 1)->parent[1], 2);
-    s_check_print(r->mlx, &(t + 2)->parent[0], &(t + 2)->parent[1], 2);
-    sierpinski_r(r->mlx, *t, 3, false);
-    sierpinski_r(r->mlx, *(t + 1), 3, false);
-    sierpinski_r(r->mlx, *(t + 2), 3, false);
-    free(t);
+    s_check_print(r->mlx, &t[0].parent[0], &t[0].parent[1], 2);
+    s_check_print(r->mlx, &t[1].parent[0], &t[1].parent[1], 2);
+    s_check_print(r->mlx, &t[2].parent[0], &t[2].parent[1], 2);
+    sierpinski_r(r->mlx, t[0], 3, false);
+    sierpinski_r(r->mlx, t[1], 3, false);
+    sierpinski_r(r->mlx, t[2], 3, false);
     pthread_mutex_unlock(&g_lock);
     pthread_exit(NULL);
     return 0;
@@ -79,16 +76,15 @@ void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i, bool first)
         mlx->iterations = 12;
     if (i > mlx->iterations || i > 12)
         return ;
-    t_triangle      *t;
     
+    t_triangle      t[3];
 
-    t = malloc(sizeof(t_triangle) * 3);
     s_check_print(mlx, &tri.child[0], &tri.child[1], i);
     s_check_print(mlx, &tri.child[1], &tri.child[2], i);
     s_check_print(mlx, &tri.child[2], &tri.child[0], i);
-    *t = new_triangles(&tri, 0);
-    *(t + 1) = new_triangles(&tri, 1);
-    *(t + 2) = new_triangles(&tri, 2);
+    t[0] = new_triangles(&tri, 0);
+    t[1] = new_triangles(&tri, 1);
+    t[2] = new_triangles(&tri, 2);
     if (first && mlx->iterations > 1)
     {
         pthread_t       thread[3];
@@ -96,18 +92,17 @@ void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i, bool first)
             printf("Mutex initialization failed.\n");
         for (int i = 0; i < 3; i++)
         {
-            t_thread_args args = ((t_thread_args){ 0, 0, i, mlx, t + i });
+            t_thread_args args = ((t_thread_args){ 0, 0, i, mlx, &t[i] });
             pthread_create(&thread[i], NULL, sierpinski_thread, &args);
             pthread_join(thread[i], NULL);
         }
     }
     else
     {
-        sierpinski_r(mlx, *t, i + 1, false);
-        sierpinski_r(mlx, *(t + 1), i + 1, false);
-        sierpinski_r(mlx, *(t + 2), i + 1, false);
+        sierpinski_r(mlx, t[0], i + 1, false);
+        sierpinski_r(mlx, t[1], i + 1, false);
+        sierpinski_r(mlx, t[2], i + 1, false);
     }
-    free(t);
 }
 
 void                sierpinski_init(t_mlx *mlx)

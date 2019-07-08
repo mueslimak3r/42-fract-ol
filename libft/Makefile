@@ -6,13 +6,13 @@
 #    By: calamber <calamber@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/04/29 23:01:53 by calamber          #+#    #+#              #
-#    Updated: 2019/07/01 18:50:40 by calamber         ###   ########.fr        #
+#    Updated: 2019/07/08 04:39:28 by calamber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
 INCLUDE = libft.h
-FLAGS = -Wall -Wextra -Werror# -g -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 
 SRC = ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c \
 ft_memchr.c ft_memcmp.c ft_strlen.c ft_strdup.c ft_strcpy.c \

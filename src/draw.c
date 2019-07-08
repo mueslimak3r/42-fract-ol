@@ -41,13 +41,13 @@ void                mandelbrot_check_print(t_mlx *mlx, int x, int y, int it)
 
 void            *mandelbrot(void *args)
 {
-	t_thread_args *r= args;
+	t_thread_args *r = args;
 
-	t_mlx *mlx = r->mlx;
-
+	//if (r->mlx)
+	//	printf("%p %p\n", r->mlx, r->mlx->image);
 	pthread_mutex_lock(&g_lock);
-  	int XSize= (1920 / 2);
-  	int YSize= (1080 / 2);
+  	int XSize= r->xsize == 0 ? (1920 / 2) : r->xsize * 2;
+  	int YSize= r->ysize == 0 ? (1080 / 2) : r->ysize * 2;
   	double MinIm=-1.0;
   	double MaxIm=1.0;
   	double MinRe=-2.0;
@@ -73,10 +73,10 @@ void            *mandelbrot(void *args)
             	Zi=2*Zr*Zi+Im;
 				Zr=a-b+Re;
 			}
-			mandelbrot_check_print(mlx, x, y, it);
+			mandelbrot_check_print(r->mlx, x, y, it);
     	}
   	}
-	  pthread_mutex_unlock(&g_lock);
+	pthread_mutex_unlock(&g_lock);
 	pthread_exit(NULL);
 	return (0);
 }
@@ -94,14 +94,15 @@ void				mandelbrot_init(t_mlx *mlx)
 		if (i == 1)
 			args = ((t_thread_args){ WIN_WIDTH / 2, 0, 0, mlx, NULL });
 		if (i == 2)
-			args = ((t_thread_args){ WIN_WIDTH / 2, 0, 0, mlx, NULL });
-		if (i == 3)
 			args = ((t_thread_args){ WIN_WIDTH / 2, WIN_HEIGHT / 2, 0, mlx, NULL });
-		if (i == 1)
-			args = ((t_thread_args){ 0, WIN_WIDTH / 2, 0, mlx, NULL });
-        pthread_create(&thread[i], NULL, mandelbrot, &args);
+		if (i == 3)
+			args = ((t_thread_args){ 0, WIN_HEIGHT / 2, 0, mlx, NULL });
+		pthread_create(&thread[i], NULL, mandelbrot, &args);
 		pthread_join(thread[i], NULL);
+		
 	}
+	//for (int i = 0; i < 1; i++)
+		
 }
 
 void				mlx_draw(t_mlx *mlx)
@@ -112,14 +113,12 @@ void				mlx_draw(t_mlx *mlx)
     clear_image(mlx->image);
     if (ft_strcmp(mlx->type, "sierpinski") == 0)
     {
-        mlx->iterations = 1;
         sierpinski_init(mlx);
         valid = true;
     }
     if (ft_strcmp(mlx->type, "mandelbrot") == 0)
     {
-        mlx->iterations = 100;
-        mandelbrot(mlx);
+        mandelbrot_init(mlx);
         valid = true;
     }
     if (valid == true)
