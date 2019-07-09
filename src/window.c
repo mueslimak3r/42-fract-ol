@@ -66,9 +66,9 @@ int     init(char *title, t_mlx *mlx)
 	//	mlx->iterations = 1;
 	////if (ft_strcmp(mlx->type, "mandelbrot") == 0)
 	//	mlx->iterations = 100;
-	mlx->cam->x = 0.5;
+	mlx->cam->x = 0;
 	// Sets parameter for camera angle for y-position (initial rotation)
-	mlx->cam->y = 0.5;
+	mlx->cam->y = 0;
 	// Dynamically adjusts INITIAL scale of image, based on initial size of map
 	mlx->cam->scale = 1;
 	// Offset Initial x state at window 

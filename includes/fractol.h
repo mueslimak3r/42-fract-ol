@@ -11,8 +11,8 @@
 # include <stdlib.h>
 # include <pthread.h>
 
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
+# define WIN_WIDTH 640
+# define WIN_HEIGHT 480
 # define MENU_WIDTH 100
 # define FT_MIN(A, B) (((A) < (B)) ? (A) : (B))
 
@@ -50,8 +50,8 @@ typedef struct		s_cam
 {
 	double			offsetx;
 	double			offsety;
-	double			x;
-	double			y;
+	double		x;
+	double		y;
 	double			scale;
 	double			**matrix;
 }					t_cam;
@@ -82,15 +82,25 @@ struct	s_triangle
 	t_vect_2	child[3];
 };
 
-typedef struct		s_thread_args
+typedef struct		s_serp_args
 {
-	int				xsize;
-	int				ysize;
 	int				nb;
 	t_mlx			*mlx;
 	t_triangle		*in;
-	//t_triangle		*out;
-}					t_thread_args;
+}					t_serp_args;
+
+typedef struct		s_fractal_args
+{
+	double			xsize;
+	double			ysize;
+	double			screenx;
+	double			screeny;
+	double		xoffset;
+	double		yoffset;
+	double		xend;
+	double		yend;
+	t_mlx			*mlx;
+}					t_fractal_args;
 
 int					init(char *title, t_mlx *mlx);
 void				mlx_draw(t_mlx *mlx);

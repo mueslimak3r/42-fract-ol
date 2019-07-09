@@ -52,7 +52,7 @@ t_triangle          new_triangles(t_triangle *tri, int nb)
 void                *sierpinski_thread(void *args)
 {
     
-    t_thread_args *r = args;
+    t_serp_args *r = args;
     t_triangle      t[3];
 
     t[0] = new_triangles(r->in, 0);
@@ -92,7 +92,7 @@ void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i, bool first)
             printf("Mutex initialization failed.\n");
         for (int i = 0; i < 3; i++)
         {
-            t_thread_args args = ((t_thread_args){ 0, 0, i, mlx, &t[i] });
+            t_serp_args args = ((t_serp_args){ i, mlx, &t[i] });
             pthread_create(&thread[i], NULL, sierpinski_thread, &args);
             pthread_join(thread[i], NULL);
         }
