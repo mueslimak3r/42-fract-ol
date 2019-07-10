@@ -118,6 +118,7 @@ void				mlx_draw(t_mlx *mlx)
 
     valid = false;
     clear_image(mlx->image);
+	mlx_clear_window(mlx->mlx, mlx->window);
     if (ft_strcmp(mlx->type, "sierpinski") == 0)
     {
         sierpinski_init(mlx);
@@ -128,6 +129,7 @@ void				mlx_draw(t_mlx *mlx)
         mandelbrot_init(mlx);
         valid = true;
     }
+	mlx_string_put(mlx->mlx, mlx->window, 10, WIN_HEIGHT - 30, WHITE, "ESC: close");
     if (valid == true)
         mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->image->image, 0, 0);
     else

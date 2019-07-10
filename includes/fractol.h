@@ -50,19 +50,18 @@ typedef struct		s_cam
 {
 	double			offsetx;
 	double			offsety;
-	double		x;
-	double		y;
+	double			x;
+	double			y;
 	double			scale;
-	double			**matrix;
 }					t_cam;
 
 typedef struct		s_mouse
 {
-	char			is_down;
-	int				x;
-	int				y;
-	int				lastx;
-	int				lasty;
+	bool			clicked;
+	double			x;
+	double			y;
+	double			lastx;
+	double			lasty;
 }					t_mouse;
 
 typedef struct		s_mlx
