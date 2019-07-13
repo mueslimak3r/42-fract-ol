@@ -47,11 +47,11 @@ void				fractal_init(t_mlx *mlx, void* (*fractal)(void *))
 	if (pthread_mutex_init(&g_lock, NULL) != 0)
         printf("Mutex initialization failed.\n");
 	double xsize = WIN_WIDTH * mlx->cam->scale;
-	double ysize = WIN_HEIGHT * mlx->cam->scale;// * 30;
+	double ysize = WIN_HEIGHT * mlx->cam->scale;
 	t_cam *cam = mlx->cam;
     for (int i = 0; i < 4; i++)
     {
-		t_fractal_args args;// = malloc(sizeof(t_fractal_args));
+		t_fractal_args args;
 		if (i == 0)
 			args = ((t_fractal_args){ xsize, ysize, 0, 0, cam->x, cam->y, cam->x + (WIN_WIDTH / 2), cam->y + (WIN_HEIGHT / 2), mlx, });
 		if (i == 1)
@@ -84,9 +84,6 @@ void				mlx_draw(t_mlx *mlx)
     }
 	if (ft_strcmp(mlx->type, "julia") == 0)
     {
-		//t_fractal_args args;
-		//args = ((t_fractal_args){ WIN_WIDTH, WIN_HEIGHT, 0, 0, mlx->cam->x, mlx->cam->y, WIN_WIDTH, WIN_HEIGHT, mlx });
-        //julia(&args);
 		fractal_init(mlx, julia);
         valid = true;
     }

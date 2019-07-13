@@ -23,28 +23,19 @@ int		hook_mouse_unpress(int button, int x, int y, t_mlx *mlx)
 
 int		hook_mousemove(int x, int y, t_mlx *mlx)
 {
-	// Store current x and y values into last x and y values
 	mlx->mouse->lastx = mlx->mouse->x;
 	mlx->mouse->lasty = mlx->mouse->y;
-	// Store parameters into current x and y values
 	mlx->mouse->x = x;
-	mlx->mouse->y = y;
-	// Shifts the camera view if mouse is held down 
+	mlx->mouse->y = y; 
 	if (mlx->mouse->clicked)
-	{
-		// Shifts the camera view
-		//mlx->cam->x = (x - (WIN_WIDTH / 2));
-		//mlx->cam->x = (y - (WIN_HEIGHT / 2));
-		//mlx->cam->x += (((WIN_WIDTH * mlx->cam->scale) * 1.3) - (WIN_WIDTH * mlx->cam->scale)) / ((WIN_WIDTH * mlx->cam->scale) / mlx->cam->x);
-		//mlx->cam->y += (((WIN_HEIGHT * mlx->cam->scale) * 1.3) - (WIN_HEIGHT * mlx->cam->scale)) / ((WIN_HEIGHT * mlx->cam->scale) / mlx->cam->y);
 		mlx->cam->scale *= 1.3;
-	}
-	// If the mouse is down, continue rendering
 	if (mlx->mouse->clicked)
 	{
 		mlx_draw(mlx);
 		mlx->mouse->clicked = false;
 	}
+	else
+		mlx_draw(mlx);
 	return (0);
 }
 
@@ -57,31 +48,12 @@ static int	fdf_key_hook(int key, t_mlx *mlx)
 	}
 	if (key == KEY_W || key == KEY_PAD_1)
 	{
-		/*
-
-		int newx = mlx->cam->x + (WIN_WIDTH / 2) * 1.3;
-		int newy;
-
-		*/
-		//mlx->cam->x += (mlx->cam->x + mlx->cam->x + (WIN_WIDTH /2)) * 0.5f;
-		//mlx->cam->y += (mlx->cam->y + mlx->cam->y + (WIN_HEIGHT /2)) * 0.5f;
-		//mlx->cam->x += (mlx->cam->x + mlx->cam->x + (WIN_WIDTH /2)) * 0.5f;
-		//mlx->cam->y += (mlx->cam->y + mlx->cam->y + (WIN_HEIGHT /2)) * 0.5f;
-		//mlx->cam->x += (((WIN_WIDTH * mlx->cam->scale) + ((WIN_WIDTH * mlx->cam->scale) * 1.3)) * 0.5f) / ((WIN_WIDTH * mlx->cam->scale) / mlx->cam->x);
-		//			+= (((WIN_HEIGHT * mlx->cam->scale) + ((WIN_HEIGHT * mlx->cam->scale) * 1.3)) * 0.5f) / ((WIN_HEIGHT * mlx->cam->scale) / mlx->cam->y);
-		
-		//mlx->cam->x -= (WIN_WIDTH / 2);
-		//mlx->cam->y -= (WIN_HEIGHT / 2);
-		//mlx->cam->x += (((WIN_WIDTH * mlx->cam->scale) * 1.3) - (WIN_WIDTH * mlx->cam->scale)) / ((WIN_WIDTH * mlx->cam->scale) / mlx->cam->x);
-		//mlx->cam->y += (((WIN_HEIGHT * mlx->cam->scale) * 1.3) - (WIN_HEIGHT * mlx->cam->scale)) / ((WIN_HEIGHT * mlx->cam->scale) / mlx->cam->y);
 		mlx->cam->scale *= 1.3;
 	}
 	if (key == KEY_S || key == KEY_PAD_2)
 	{
 		if (mlx->cam->scale * 0.6 <= 0)
 			return (0);
-		//mlx->cam->x -= ((WIN_WIDTH * mlx->cam->scale) - ((WIN_WIDTH * mlx->cam->scale) * 0.6)) / ((WIN_WIDTH * mlx->cam->scale) / mlx->cam->x);
-		//mlx->cam->y -= ((WIN_HEIGHT * mlx->cam->scale) - ((WIN_HEIGHT * mlx->cam->scale) * 0.6)) / ((WIN_HEIGHT * mlx->cam->scale) / mlx->cam->y);;
 		mlx->cam->scale *= 0.6;
 	}
 	if (key == KEY_I || key == KEY_PAD_4)
