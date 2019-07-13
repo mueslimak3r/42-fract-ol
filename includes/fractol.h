@@ -111,5 +111,8 @@ void				start(t_mlx *mlx);
 void				image_set_pixel(t_image *image, int x, int y, int color);
 void        		dda(t_mlx *mlx, t_vect_2 start, t_vect_2 end, int it);
 void                sierpinski_init(t_mlx *mlx);
-
+void                fractal_check_print(t_mlx *mlx, int x, int y, int it);
+void            	*mandelbrot(void *args);
+void            	*julia(void *args);
+int         colors(int i);
 #endif

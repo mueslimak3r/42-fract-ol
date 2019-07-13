@@ -33,10 +33,10 @@ int		hook_mousemove(int x, int y, t_mlx *mlx)
 	if (mlx->mouse->clicked)
 	{
 		// Shifts the camera view
-		mlx->cam->x = (x - (WIN_WIDTH / 2));
-		mlx->cam->x = (y - (WIN_HEIGHT / 2));
-		mlx->cam->x += (((WIN_WIDTH * mlx->cam->scale) * 1.3) - (WIN_WIDTH * mlx->cam->scale)) / ((WIN_WIDTH * mlx->cam->scale) / mlx->cam->x);
-		mlx->cam->y += (((WIN_HEIGHT * mlx->cam->scale) * 1.3) - (WIN_HEIGHT * mlx->cam->scale)) / ((WIN_HEIGHT * mlx->cam->scale) / mlx->cam->y);
+		//mlx->cam->x = (x - (WIN_WIDTH / 2));
+		//mlx->cam->x = (y - (WIN_HEIGHT / 2));
+		//mlx->cam->x += (((WIN_WIDTH * mlx->cam->scale) * 1.3) - (WIN_WIDTH * mlx->cam->scale)) / ((WIN_WIDTH * mlx->cam->scale) / mlx->cam->x);
+		//mlx->cam->y += (((WIN_HEIGHT * mlx->cam->scale) * 1.3) - (WIN_HEIGHT * mlx->cam->scale)) / ((WIN_HEIGHT * mlx->cam->scale) / mlx->cam->y);
 		mlx->cam->scale *= 1.3;
 	}
 	// If the mouse is down, continue rendering
@@ -65,8 +65,8 @@ static int	fdf_key_hook(int key, t_mlx *mlx)
 		*/
 		//mlx->cam->x += (mlx->cam->x + mlx->cam->x + (WIN_WIDTH /2)) * 0.5f;
 		//mlx->cam->y += (mlx->cam->y + mlx->cam->y + (WIN_HEIGHT /2)) * 0.5f;
-		mlx->cam->x += (mlx->cam->x + mlx->cam->x + (WIN_WIDTH /2)) * 0.5f;
-		mlx->cam->y += (mlx->cam->y + mlx->cam->y + (WIN_HEIGHT /2)) * 0.5f;
+		//mlx->cam->x += (mlx->cam->x + mlx->cam->x + (WIN_WIDTH /2)) * 0.5f;
+		//mlx->cam->y += (mlx->cam->y + mlx->cam->y + (WIN_HEIGHT /2)) * 0.5f;
 		//mlx->cam->x += (((WIN_WIDTH * mlx->cam->scale) + ((WIN_WIDTH * mlx->cam->scale) * 1.3)) * 0.5f) / ((WIN_WIDTH * mlx->cam->scale) / mlx->cam->x);
 		//			+= (((WIN_HEIGHT * mlx->cam->scale) + ((WIN_HEIGHT * mlx->cam->scale) * 1.3)) * 0.5f) / ((WIN_HEIGHT * mlx->cam->scale) / mlx->cam->y);
 		
@@ -80,8 +80,8 @@ static int	fdf_key_hook(int key, t_mlx *mlx)
 	{
 		if (mlx->cam->scale * 0.6 <= 0)
 			return (0);
-		mlx->cam->x -= ((WIN_WIDTH * mlx->cam->scale) - ((WIN_WIDTH * mlx->cam->scale) * 0.6)) / ((WIN_WIDTH * mlx->cam->scale) / mlx->cam->x);
-		mlx->cam->y -= ((WIN_HEIGHT * mlx->cam->scale) - ((WIN_HEIGHT * mlx->cam->scale) * 0.6)) / ((WIN_HEIGHT * mlx->cam->scale) / mlx->cam->y);;
+		//mlx->cam->x -= ((WIN_WIDTH * mlx->cam->scale) - ((WIN_WIDTH * mlx->cam->scale) * 0.6)) / ((WIN_WIDTH * mlx->cam->scale) / mlx->cam->x);
+		//mlx->cam->y -= ((WIN_HEIGHT * mlx->cam->scale) - ((WIN_HEIGHT * mlx->cam->scale) * 0.6)) / ((WIN_HEIGHT * mlx->cam->scale) / mlx->cam->y);;
 		mlx->cam->scale *= 0.6;
 	}
 	if (key == KEY_I || key == KEY_PAD_4)
@@ -111,6 +111,8 @@ void		start(t_mlx *mlx)
 	if (ft_strcmp(mlx->type, "sierpinski") == 0)
 		mlx->iterations = 10;
 	if (ft_strcmp(mlx->type, "mandelbrot") == 0)
+		mlx->iterations = 50;
+	if (ft_strcmp(mlx->type, "julia") == 0)
 		mlx->iterations = 50;
     mlx_draw(mlx);
 	mlx_hook(mlx->window, 4, 0, hook_mouse_unpress, mlx);

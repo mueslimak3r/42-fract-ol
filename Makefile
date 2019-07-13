@@ -13,7 +13,7 @@
 NAME = fractol
 
 SRC_DIR = ./src/
-SRC_FILES = main.c image.c window.c input.c draw.c sierpinski.c
+SRC_FILES = main.c image.c window.c input.c draw.c sierpinski.c mandelbrot.c julia.c
 SRCS = $(addprefix $(SRC_DIR), $(SRC_FILES))
 
 INC_DIR = ./includes/
@@ -24,7 +24,7 @@ OBJ_FILES = $(SRC_FILES:.c=.o)
 OBJS = $(addprefix $(OBJ_DIR), $(OBJ_FILES))
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address #-g # -O0 
+CFLAGS = -Wall -Wextra -Werror -g #-g -fsanitize=address #-g # -O0 
 
 LIBS = $(MLX_LNK) $(FT_LNK) -lm
 
