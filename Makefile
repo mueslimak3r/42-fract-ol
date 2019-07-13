@@ -13,7 +13,7 @@
 NAME = fractol
 
 SRC_DIR = ./src/
-SRC_FILES = main.c image.c window.c input.c draw.c sierpinski.c mandelbrot.c julia.c
+SRC_FILES = main.c image.c window.c input.c draw.c sierpinski.c mandelbrot.c julia.c line.c
 SRCS = $(addprefix $(SRC_DIR), $(SRC_FILES))
 
 INC_DIR = ./includes/

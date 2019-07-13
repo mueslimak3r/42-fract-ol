@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   window.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: calamber <calamber@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 23:56:37 by calamber          #+#    #+#             */
+/*   Updated: 2019/07/12 23:58:51 by calamber         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 
-void    mlxdel(t_mlx *mlx)
+void		mlxdel(t_mlx *mlx)
 {
 	if (mlx->window != NULL)
 		mlx_destroy_window(mlx->mlx, mlx->window);
@@ -10,6 +22,7 @@ void    mlxdel(t_mlx *mlx)
 		ft_memdel((void **)&mlx->mouse);
 	if (mlx->image != NULL)
 		del_image(mlx, mlx->image);
+	exit(0);
 }
 
 int			newwindow(t_mlx *s, char *title)
@@ -27,15 +40,12 @@ int			newwindow(t_mlx *s, char *title)
 	return (0);
 }
 
-int     init(char *title, t_mlx *mlx)
+int			init(char *title, t_mlx *mlx)
 {
-	if (newwindow(mlx, title) || (mlx->cam = ft_memalloc(sizeof(t_cam))) == NULL ||
-			(mlx->mouse = ft_memalloc(sizeof(t_mouse))) == NULL ||
-			(mlx->image = new_image(mlx)) == NULL) 
-	{
-        mlxdel(mlx);
-		return (0);
-    }
+	if (newwindow(mlx, title) || (mlx->cam = ft_memalloc(sizeof(t_cam)))
+		== NULL || (mlx->mouse = ft_memalloc(sizeof(t_mouse))) == NULL
+		|| (mlx->image = new_image(mlx)) == NULL)
+		mlxdel(mlx);
 	mlx->cam->x = 0;
 	mlx->cam->y = 0;
 	mlx->cam->scale = 1;

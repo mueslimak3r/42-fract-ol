@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   image.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: calamber <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 23:46:37 by calamber          #+#    #+#             */
+/*   Updated: 2019/07/12 23:47:39 by calamber         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 
 void	image_set_pixel(t_image *image, int x, int y, int color)
@@ -12,7 +24,7 @@ void	clear_image(t_image *image)
 	ft_bzero(image->ptr, WIN_WIDTH * WIN_HEIGHT * image->bpp);
 }
 
-t_image		*del_image(t_mlx *mlx, t_image *img)
+t_image	*del_image(t_mlx *mlx, t_image *img)
 {
 	if (img != NULL)
 	{
@@ -23,7 +35,7 @@ t_image		*del_image(t_mlx *mlx, t_image *img)
 	return (NULL);
 }
 
-t_image		*new_image(t_mlx *mlx)
+t_image	*new_image(t_mlx *mlx)
 {
 	t_image		*img;
 
@@ -31,7 +43,7 @@ t_image		*new_image(t_mlx *mlx)
 		return (NULL);
 	if ((img->image = mlx_new_image(mlx->mlx, WIN_WIDTH, WIN_HEIGHT)) == NULL)
 		return (del_image(mlx, img));
-	img->ptr = mlx_get_data_addr(img->image, &img->bpp, &img->stride, 
+	img->ptr = mlx_get_data_addr(img->image, &img->bpp, &img->stride,
 			&img->endian);
 	img->bpp /= 8;
 	return (img);

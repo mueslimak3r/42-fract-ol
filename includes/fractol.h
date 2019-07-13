@@ -114,5 +114,7 @@ void                sierpinski_init(t_mlx *mlx);
 void                fractal_check_print(t_mlx *mlx, int x, int y, int it);
 void            	*mandelbrot(void *args);
 void            	*julia(void *args);
-int         colors(int i);
+int					colors(int i);
+void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i, bool first);
+t_triangle          new_triangles(t_triangle *tri, int nb);
 #endif

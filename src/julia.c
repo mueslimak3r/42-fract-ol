@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   julia.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: calamber <calamber@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 23:37:16 by calamber          #+#    #+#             */
+/*   Updated: 2019/07/12 23:46:00 by calamber         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 
 static int		calc(t_fractal_args *r, double x, double y)
@@ -18,25 +30,30 @@ static int		calc(t_fractal_args *r, double x, double y)
 	return (i);
 }
 
-void            *julia(void *args)
+void			*julia(void *args)
 {
-	t_fractal_args *r = args;
+	t_fractal_args	*r;
+	int				sx;
+	double			x;
+	int				it;
+
+	r = args;
 	pthread_mutex_lock(&g_lock);
-	int sy= r->screeny;
-	for(double y=r->yoffset;y<r->yend;y++)
+	while (r->yoffset++ < r->yend)
 	{
-		int sx = r->screenx;
-		for(double x=r->xoffset; x<r->xend; x++)
-      	{
-          	int it= calc(args, x, y);
-            if (it < r->mlx->iterations)
-                fractal_check_print(r->mlx, sx, sy, it);
+		sx = r->screenx;
+		x = r->xoffset;
+		while (x++ < r->xend)
+		{
+			it = calc(args, x, r->yoffset);
+			if (it < r->mlx->iterations)
+				fractal_check_print(r->mlx, sx, r->screeny, it);
 			sx++;
 		}
-		sy++;
-  	}
+		r->screeny++;
+	}
+	free(args);
 	pthread_mutex_unlock(&g_lock);
 	pthread_exit(NULL);
 	return (0);
 }
-

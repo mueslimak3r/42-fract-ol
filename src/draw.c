@@ -1,95 +1,98 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: calamber <calamber@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/12 23:12:45 by calamber          #+#    #+#             */
+/*   Updated: 2019/07/12 23:34:01 by calamber         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 
-
-
-static int	ft_abs(int n)
+int						colors(int i)
 {
-	return ((n > 0) ? n : (n * -1));
+	int colors[3];
+
+	colors[0] = RED;
+	colors[1] = GREEN;
+	colors[2] = BLUE;
+	return (colors[i % 3]);
 }
 
-int         colors(int i)
+void					fractal_check_print(t_mlx *mlx, int x, int y, int it)
 {
-    int colors[3] = { RED, GREEN, BLUE };
-    return(colors[i % 3]);
+	if (x >= 0 && y <= WIN_WIDTH && y >= 0 && y <= WIN_HEIGHT)
+		image_set_pixel(mlx->image, x, y, colors(it));
 }
 
-void        dda(t_mlx *mlx, t_vect_2 start, t_vect_2 end, int it)
+static t_fractal_args	*f_args_make(t_mlx *mlx, int nb)
 {
-	int	dx;
-	int	dy;
-	int	steps;
-	int	i;
+	t_fractal_args	*new;
+	t_cam			*cam;
+	double			xsize;
+	double			ysize;
 
-	dx = (int)end.x - (int)start.x;
-	dy = (int)end.y - (int)start.y;
-	steps = ft_abs(dx) > ft_abs(dy) ? ft_abs(dx) : ft_abs(dy);
+	new = ft_memalloc(sizeof(t_fractal_args));
+	xsize = WIN_WIDTH * mlx->cam->scale;
+	ysize = WIN_HEIGHT * mlx->cam->scale;
+	cam = mlx->cam;
+	if (nb == 0)
+		*new = ((t_fractal_args){ xsize, ysize, 0, 0, cam->x, cam->y,
+		cam->x + (WIN_WIDTH / 2), cam->y + (WIN_HEIGHT / 2), mlx });
+	if (nb == 1)
+		*new = ((t_fractal_args){ xsize, ysize, WIN_WIDTH / 2, 0,
+		cam->x + (WIN_WIDTH / 2), cam->y, cam->x + WIN_WIDTH, cam->y
+		+ (WIN_HEIGHT / 2), mlx });
+	if (nb == 2)
+		*new = ((t_fractal_args){ xsize, ysize, WIN_WIDTH / 2,
+		WIN_HEIGHT / 2, cam->x + (WIN_WIDTH / 2), cam->y + (WIN_HEIGHT / 2),
+		cam->x + WIN_WIDTH, cam->y + WIN_HEIGHT, mlx });
+	if (nb == 3)
+		*new = ((t_fractal_args){ xsize, ysize, 0, WIN_HEIGHT / 2,
+		cam->x, cam->y + (WIN_HEIGHT / 2), cam->x + (WIN_WIDTH / 2),
+		cam->y + WIN_HEIGHT, mlx });
+	return (new);
+}
+
+void					fractal_init(t_mlx *mlx, void *(*fractal)(void *))
+{
+	pthread_t		thread[4];
+	int				i;
+
+	if (pthread_mutex_init(&g_lock, NULL) != 0)
+		ft_printf("Mutex initialization failed.\n");
 	i = 0;
-	while (i <= steps)
+	while (i < 4)
 	{
-        if (i == (steps / 2) - 1)
-            end = (t_vect_2){ start.x, start.y };
-        image_set_pixel(mlx->image, start.x, start.y, colors(it));
-		start.x += dx / (float)steps;
-		start.y += dy / (float)steps;
+		pthread_create(&thread[i], NULL, fractal, f_args_make(mlx, i));
+		pthread_join(thread[i], NULL);
 		i++;
 	}
 }
 
-void                fractal_check_print(t_mlx *mlx, int x, int y, int it)
+void					mlx_draw(t_mlx *mlx)
 {
-    if (x >= 0 && y <= WIN_WIDTH && y >= 0 && y <= WIN_HEIGHT)
-		image_set_pixel(mlx->image, x, y, colors(it));
-}
+	bool	valid;
 
-void				fractal_init(t_mlx *mlx, void* (*fractal)(void *))
-{
-	pthread_t       thread[4];
-	if (pthread_mutex_init(&g_lock, NULL) != 0)
-        ft_printf("Mutex initialization failed.\n");
-	double xsize = WIN_WIDTH * mlx->cam->scale;
-	double ysize = WIN_HEIGHT * mlx->cam->scale;
-	t_cam *cam = mlx->cam;
-    for (int i = 0; i < 4; i++)
-    {
-		t_fractal_args args;
-		if (i == 0)
-			args = ((t_fractal_args){ xsize, ysize, 0, 0, cam->x, cam->y, cam->x + (WIN_WIDTH / 2), cam->y + (WIN_HEIGHT / 2), mlx, });
-		if (i == 1)
-			args = ((t_fractal_args){ xsize, ysize, WIN_WIDTH / 2, 0, cam->x + (WIN_WIDTH / 2), cam->y, cam->x + WIN_WIDTH, cam->y + (WIN_HEIGHT / 2), mlx });
-		if (i == 2)
-			args = ((t_fractal_args){ xsize, ysize, WIN_WIDTH / 2, WIN_HEIGHT / 2, cam->x + (WIN_WIDTH / 2), cam->y + (WIN_HEIGHT / 2), cam->x + WIN_WIDTH, cam->y + WIN_HEIGHT, mlx });
-		if (i == 3)
-			args = ((t_fractal_args){ xsize, ysize, 0, WIN_HEIGHT / 2, cam->x, cam->y + (WIN_HEIGHT / 2), cam->x + (WIN_WIDTH / 2), cam->y + WIN_HEIGHT, mlx });
-		pthread_create(&thread[i], NULL, fractal, &args);
-		pthread_join(thread[i], NULL);
-	}
-}
-
-void				mlx_draw(t_mlx *mlx)
-{
-    bool             valid;
-
-    valid = false;
-    clear_image(mlx->image);
+	valid = true;
+	clear_image(mlx->image);
 	mlx_clear_window(mlx->mlx, mlx->window);
-    if (ft_strcmp(mlx->type, "sierpinski") == 0)
-    {
-        sierpinski_init(mlx);
-        valid = true;
-    }
-    if (ft_strcmp(mlx->type, "mandelbrot") == 0)
-    {
-        fractal_init(mlx, mandelbrot);
-        valid = true;
-    }
-	if (ft_strcmp(mlx->type, "julia") == 0)
-    {
+	if (ft_strcmp(mlx->type, "sierpinski") == 0)
+		sierpinski_init(mlx);
+	else if (ft_strcmp(mlx->type, "mandelbrot") == 0)
+		fractal_init(mlx, mandelbrot);
+	else if (ft_strcmp(mlx->type, "julia") == 0)
 		fractal_init(mlx, julia);
-        valid = true;
-    }
-	mlx_string_put(mlx->mlx, mlx->window, 10, WIN_HEIGHT - 30, WHITE, "ESC: close");
-    if (valid == true)
-        mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->image->image, 0, 0);
-    else
-        mlx_string_put(mlx->mlx, mlx->window, WIN_WIDTH / 2 - 10, 10, WHITE, "bad selection");
+	else
+		valid = false;
+	mlx_string_put(mlx->mlx, mlx->window, 10, WIN_HEIGHT - 30,
+		WHITE, "ESC: close");
+	if (valid == true)
+		mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->image->image, 0, 0);
+	else
+		mlx_string_put(mlx->mlx, mlx->window, WIN_WIDTH / 2 - 10, 10,
+			WHITE, "bad selection");
 }
