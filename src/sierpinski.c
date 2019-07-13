@@ -89,7 +89,7 @@ void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i, bool first)
     {
         pthread_t       thread[3];
         if (pthread_mutex_init(&g_lock, NULL) != 0)
-            printf("Mutex initialization failed.\n");
+            ft_printf("Mutex initialization failed.\n");
         for (int i = 0; i < 3; i++)
         {
             t_serp_args args = ((t_serp_args){ i, mlx, &t[i] });

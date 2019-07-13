@@ -45,7 +45,7 @@ void				fractal_init(t_mlx *mlx, void* (*fractal)(void *))
 {
 	pthread_t       thread[4];
 	if (pthread_mutex_init(&g_lock, NULL) != 0)
-        printf("Mutex initialization failed.\n");
+        ft_printf("Mutex initialization failed.\n");
 	double xsize = WIN_WIDTH * mlx->cam->scale;
 	double ysize = WIN_HEIGHT * mlx->cam->scale;
 	t_cam *cam = mlx->cam;
