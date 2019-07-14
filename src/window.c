@@ -6,7 +6,7 @@
 /*   By: calamber <calamber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 23:56:37 by calamber          #+#    #+#             */
-/*   Updated: 2019/07/12 23:58:51 by calamber         ###   ########.fr       */
+/*   Updated: 2019/07/13 23:56:21 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ int			init(char *title, t_mlx *mlx)
 		== NULL || (mlx->mouse = ft_memalloc(sizeof(t_mouse))) == NULL
 		|| (mlx->image = new_image(mlx)) == NULL)
 		mlxdel(mlx);
+	mlx->palette = 0;
+	mlx->p_size = 4;
+	mlx->c_lock = false;
+	mlx->m_lock = true;
 	mlx->cam->x = 0;
 	mlx->cam->y = 0;
 	mlx->cam->scale = 1;

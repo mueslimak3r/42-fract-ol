@@ -6,7 +6,7 @@
 /*   By: calamber <calamber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 23:55:07 by calamber          #+#    #+#             */
-/*   Updated: 2019/07/12 23:55:51 by calamber         ###   ########.fr       */
+/*   Updated: 2019/07/13 23:55:01 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static void	print_info(void)
 	ft_putendl("move: click region to zoom and move or use arrow keys");
 	ft_putendl("zoom: left mouse click or w && s or npad 1 && 2");
 	ft_putendl("change iterations: i && r or npad 4 && 5");
+	ft_putstr("toggles:\n manual color mode: L to enable,");
+	ft_putendl(" P to cycle through palettes\npsychedelic mode: M");
 	ft_putendl("\nrun: ./fractol type");
 	ft_putendl("\ntypes:");
 	ft_putendl("mandelbrot");

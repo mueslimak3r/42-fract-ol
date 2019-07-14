@@ -6,26 +6,29 @@
 /*   By: calamber <calamber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 23:12:45 by calamber          #+#    #+#             */
-/*   Updated: 2019/07/12 23:34:01 by calamber         ###   ########.fr       */
+/*   Updated: 2019/07/13 20:11:22 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-int						colors(int i)
+int						colors(int i, t_mlx *mlx)
 {
-	int colors[3];
+	int *rgb[mlx->p_size];
 
-	colors[0] = RED;
-	colors[1] = GREEN;
-	colors[2] = BLUE;
-	return (colors[i % 3]);
+	rgb[0] = (int[3]){ RED, GREEN, BLUE };
+	rgb[1] = (int[3]){ FLAMINGO, YELLOW, AQUA_MARINE };
+	rgb[2] = (int[3]){ DARK_GRAY, HONEYDEW, SALMON };
+	rgb[3] = (int[3]){ LAVENDER, MIDNIGHT_BLUE, PURPLE };
+	if (mlx->c_lock)
+		return (rgb[mlx->palette][i % 3]);
+	return (rgb[i % mlx->p_size][i % 3]);
 }
 
 void					fractal_check_print(t_mlx *mlx, int x, int y, int it)
 {
 	if (x >= 0 && y <= WIN_WIDTH && y >= 0 && y <= WIN_HEIGHT)
-		image_set_pixel(mlx->image, x, y, colors(it));
+		image_set_pixel(mlx->image, x, y, colors(it, mlx));
 }
 
 static t_fractal_args	*f_args_make(t_mlx *mlx, int nb)
@@ -78,6 +81,7 @@ void					mlx_draw(t_mlx *mlx)
 	bool	valid;
 
 	valid = true;
+	mlx->mouse->clicked = false;
 	clear_image(mlx->image);
 	mlx_clear_window(mlx->mlx, mlx->window);
 	if (ft_strcmp(mlx->type, "sierpinski") == 0)

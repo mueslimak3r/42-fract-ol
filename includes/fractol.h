@@ -66,13 +66,18 @@ typedef struct		s_mouse
 
 typedef struct		s_mlx
 {
+	char			*type;
 	int				iterations;
+	int				palette;
+	int				p_size;
+	bool			c_lock;
+	bool			m_lock;
 	void			*mlx;
 	void			*window;
 	t_image			*image;
 	t_cam			*cam;
 	t_mouse			*mouse;
-	char			*type;
+	
 }					t_mlx;
 
 struct	s_triangle
@@ -94,10 +99,10 @@ typedef struct		s_fractal_args
 	double			ysize;
 	double			screenx;
 	double			screeny;
-	double		xoffset;
-	double		yoffset;
-	double		xend;
-	double		yend;
+	double			xoffset;
+	double			yoffset;
+	double			xend;
+	double			yend;
 	t_mlx			*mlx;
 }					t_fractal_args;
 
@@ -114,7 +119,11 @@ void                sierpinski_init(t_mlx *mlx);
 void                fractal_check_print(t_mlx *mlx, int x, int y, int it);
 void            	*mandelbrot(void *args);
 void            	*julia(void *args);
-int					colors(int i);
+int					colors(int i, t_mlx *mlx);
 void                sierpinski_r(t_mlx *mlx, t_triangle tri, int i, bool first);
 t_triangle          new_triangles(t_triangle *tri, int nb);
+void				new_tri_helper(t_triangle *t, t_triangle *tri, int nb);
+void				*sierpinski_thread(void *args);
+void				sierpinski_helper(t_triangle t[3], t_mlx *mlx, int i, bool first);
+void				cam_reset(t_mlx *mlx);
 #endif
