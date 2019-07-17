@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calamber <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: calamber <calamber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 00:24:45 by calamber          #+#    #+#             */
-/*   Updated: 2018/05/04 16:51:33 by calamber         ###   ########.fr       */
+/*   Updated: 2019/07/16 10:05:24 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,5 @@ char	*ft_itoa(long long nbr)
 		str[length] = (nbr >= 10) ? (nbr % 10) + 48 : nbr + 48;
 		nbr /= 10;
 	}
-	str[ft_strlen(str)] = '\0';
 	return (str);
 }

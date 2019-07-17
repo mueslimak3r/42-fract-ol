@@ -6,7 +6,7 @@
 /*   By: calamber <calamber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 23:12:45 by calamber          #+#    #+#             */
-/*   Updated: 2019/07/13 20:11:22 by calamber         ###   ########.fr       */
+/*   Updated: 2019/07/15 21:46:11 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static t_fractal_args	*f_args_make(t_mlx *mlx, int nb)
 	return (new);
 }
 
-void					fractal_init(t_mlx *mlx, void *(*fractal)(void *))
+static void				fractal_init(t_mlx *mlx, void *(*fractal)(void *))
 {
 	pthread_t		thread[4];
 	int				i;

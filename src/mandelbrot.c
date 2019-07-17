@@ -6,13 +6,13 @@
 /*   By: calamber <calamber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 22:47:21 by calamber          #+#    #+#             */
-/*   Updated: 2019/07/12 23:25:17 by calamber         ###   ########.fr       */
+/*   Updated: 2019/07/15 21:46:52 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-int				m_calc(t_mlx *mlx, double re, double im)
+static int		m_calc(t_mlx *mlx, double re, double im)
 {
 	double	zr;
 	double	zi;

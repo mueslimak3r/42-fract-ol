@@ -6,18 +6,11 @@
 /*   By: calamber <calamber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/12 23:53:45 by calamber          #+#    #+#             */
-/*   Updated: 2019/07/13 20:08:16 by calamber         ###   ########.fr       */
+/*   Updated: 2019/07/15 17:37:07 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
-
-void		cam_reset(t_mlx *mlx)
-{
-	mlx->cam->scale = 1;
-	mlx->cam->x = 0;
-	mlx->cam->y = 0;
-}
 
 static int	ft_abs(int n)
 {

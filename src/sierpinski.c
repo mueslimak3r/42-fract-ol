@@ -6,13 +6,13 @@
 /*   By: calamber <calamber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/13 00:00:58 by calamber          #+#    #+#             */
-/*   Updated: 2019/07/13 19:02:29 by calamber         ###   ########.fr       */
+/*   Updated: 2019/07/15 21:47:58 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void				s_check_print(t_mlx *mlx, t_vect_2 *a, t_vect_2 *b, int i)
+static void			s_check_print(t_mlx *mlx, t_vect_2 *a, t_vect_2 *b, int i)
 {
 	t_vect_2		mid;
 
