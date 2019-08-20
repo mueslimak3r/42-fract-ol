@@ -59,7 +59,7 @@ static void			extra_key_hooks(int key, t_mlx *mlx)
 		mlx->mouse->locked = !mlx->mouse->locked;
 	else if (key == KEY_BACKSPACE)
 		cam_reset(mlx);
-	else if (key == KEY_I || key == KEY_PAD_4)
+	else if (key == KEY_I)
 		mlx->iterations += ft_strcmp(mlx->type, "sierpinski") == 0 ? 1 : 25;
 }
 
@@ -67,11 +67,11 @@ static int			fdf_key_hook(int key, t_mlx *mlx)
 {
 	if (key == KEY_ESCAPE)
 		mlxdel(mlx);
-	else if (key == KEY_W || key == KEY_PAD_1)
+	else if (key == KEY_W)
 		cam_scale(mlx, 0, 0, 1);
-	else if (key == KEY_S || key == KEY_PAD_2)
+	else if (key == KEY_S)
 		cam_scale(mlx, 0, 0, 0);
-	else if (key == KEY_R || key == KEY_PAD_5)
+	else if (key == KEY_R)
 		mlx->iterations -= mlx->iterations - 1 < 0 ? 0 : 1;
 	else if (key == KEY_L)
 		mlx->c_lock = mlx->c_lock ? false : true;

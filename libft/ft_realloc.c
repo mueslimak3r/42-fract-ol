@@ -15,9 +15,7 @@
 void	*ft_realloc(void *thing, size_t orig_size, size_t size)
 {
 	void	*ret;
-	int		i;
 
-	i = -1;
 	if (!(ret = (void*)ft_memalloc(size)))
 		return (NULL);
 	if (!thing)

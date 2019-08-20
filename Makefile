@@ -17,58 +17,65 @@ SRC_FILES = main.c image.c window.c input.c draw.c sierpinski.c mandelbrot.c jul
 SRCS = $(addprefix $(SRC_DIR), $(SRC_FILES))
 
 INC_DIR = ./includes/
-INCLUDES = -I$(INC_DIR) $(FT_INC) $(MLX_INC)
+INCLUDES =  -I $(INC_DIR) $(FT_INC) $(MLX_INC)
 
 OBJ_DIR = ./obj/
 OBJ_FILES = $(SRC_FILES:.c=.o)
 OBJS = $(addprefix $(OBJ_DIR), $(OBJ_FILES))
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address -O0 
+CFLAGS = -g -Wall -Wextra -Werror
 
-LIBS = $(MLX_LNK) $(FT_LNK) -lm
+FT	= ./libft/
+FT_LNK	= -L $(FT) -l ft
+FT_LIB	= $(addprefix $(FT),libft.a)
+FT_INC	= -I $(FT)includes
 
-MLX		= ./minilibx/
+ifeq ($(shell uname), Linux)
+	MLX	= ./minilibx_X11/
+	MLX_LNK	= -L $(MLX) -lmlx -lXext -lX11 -lpthread -lm
+	#echo LINUX_MACHINE
+else
+	MLX	= ./minilibx/
+	MLX_LNK	= -L $(MLX) -lmlx -framework OpenGL -framework AppKit
+	#echo MACH_MACHINE
+endif
 MLX_LIB	= $(addprefix $(MLX),libmlx.a)
 MLX_INC	= -I $(MLX)
-MLX_LNK	= -L minilibx -l mlx -framework OpenGL -framework AppKit
 
-FT		= ./libft/
-FT_LIB	= $(addprefix $(FT),libft.a)
-FT_INC	= -I ./libft/includes/
-FT_LNK	= -L libft -l ft
 
 all: obj $(FT_LIB) $(MLX_LIB) $(NAME)
 
 obj:
-	@mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(FT_LIB):
-	@if [[ ! -e $(FT_LIB) ]]; then make -C $(FT); fi
+	#if [[ ! -e $(FT_LIB) ]]; then echo "found libft" else make -C $(FT) fi
+	make -C ./libft/ #$(FT)
 
 $(MLX_LIB):
-	@if [[ ! -e $(MLX_LIB) ]]; then make -C $(MLX) &> /dev/null; fi
+	#if [[ ! -e $(MLX_LIB) ]]; then echo "found mlx" else make -C $(MLX) fi
+	make -C $(MLX)
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(FT_LNK) $(MLX_LNK) -o $(NAME)
 
 clean:
-	@make -C $(FT) clean
-	@rm -rf $(OBJ_DIR)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	@make -C $(FT) fclean
-	@make -C $(MLX) clean &> /dev/null
-	@rm -rf $(NAME)
+	make -C $(FT) fclean
+	make -C $(MLX) clean
+	rm -rf $(NAME)
 
 re: fclean all
 
-req: clean
-	@rm -rf $(NAME)
-	@make all
-	@make clean
+do:
+	make clean
+	make
+	make clean
 
-.PHONY: all obj $(NAME) clean fclean re req
+.PHONY: all obj $(NAME) clean fclean re do

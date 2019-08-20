@@ -15,7 +15,11 @@
 
 # include "../libft/libft.h"
 # include "colors.h"
+# ifdef __linux__
+# include "keycode_linux.h"
+# else
 # include "keycode_mac.h"
+# endif
 # include "mlx.h"
 # include <math.h>
 # include <limits.h>
